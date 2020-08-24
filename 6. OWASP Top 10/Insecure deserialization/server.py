@@ -15,7 +15,7 @@ def home():
             response = make_response('Thanks for your data')
         except:
             response = make_response('En error occured. Use base64 for your data')
-    response.headers['Content-Type'] = 'application/json'
+    response.headers['Content-Type'] = 'text/plain'
     return response
 
 
