@@ -28,7 +28,7 @@ def echo_socket(ws):
         message = ws.receive()
         # Vulnerable point
         if 'token=1' in ws.handler.path:
-            ws.send('Hi Alice!')
+            ws.send('Hi Alice. This is a private message for you!')
         else:
             ws.send('I don\'t know you')
 
