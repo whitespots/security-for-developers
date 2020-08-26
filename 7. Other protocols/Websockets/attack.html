@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attack</title>
+</head>
+<body>
+    <input type="text" id="token" value="0">
+    <button onclick="buttonPress()">Change id</button>
+</body>
+<script type="text/javascript">
+    var token = 0;
+
+    buttonPress = function() {
+        token = document.getElementById('token').value;
+        socket = new WebSocket('ws://localhost:5000/?token=' + token);
+        socket.addEventListener('open', function (event) {
+            socket.send('Is my token valid?');
+        });
+
+        // Listen for messages
+        socket.addEventListener('message', function (event) {
+            document.body.append(event.data);
+            console.log('Message from server ', event.data);
+            setTimeout(function(){
+                socket.send('Is my token valid?');
+            }, 3000);
+        });
+    }
+
+    var socket = new WebSocket('ws://localhost:5000/?token=' + token);
+
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+        socket.send('Is my token valid?');
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+        document.body.append(event.data);
+        console.log('Message from server ', event.data);
+        setTimeout(function(){
+            socket.send('Is my token valid?');
+        }, 3000);
+    });
+
+</script>
+</html>
