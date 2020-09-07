@@ -18,4 +18,4 @@ SSH-2.2-OpenSSH_5.1p1 Debian-8
 docker build -t whitespots/connect-tunnel .
 docker run -it --rm --name connect-tunnel whitespots/connect-tunnel -P victim:8080 -T hostport:target:port -v
 
-(Read more about this tool)[http://manpages.ubuntu.com/manpages/bionic/man1/connect-tunnel.1p.html]
+[Read more about this tool](http://manpages.ubuntu.com/manpages/bionic/man1/connect-tunnel.1p.html)
