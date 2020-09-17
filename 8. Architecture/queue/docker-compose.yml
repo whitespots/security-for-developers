@@ -1,0 +1,24 @@
+version: '3'
+services:
+  redis:
+    image: "bitnami/redis:latest"
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  web:
+    build: .
+    depends_on:
+      - redis
+    ports:
+      - "5000:5000"
+  workers:
+    build: workers
+    depends_on:
+      - redis
+  dashboard:
+    build: dashboard
+    depends_on:
+      - redis
+    ports:
+      - "9181:9181"
