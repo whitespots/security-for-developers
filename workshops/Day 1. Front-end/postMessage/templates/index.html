@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<nav>
+  <ul>
+      <li><a href="{{ url_for('hello') }}">Home</a>
+  </ul>
+</nav>
+
+
+<iframe id="iframe" src="/iframe"></iframe>
+<script>
+    window.addEventListener('message', (event) => {
+        console.log(`Received message: ${event.data}`);
+    });
+</script>
+</body>
+
+
+
+
+</html>
