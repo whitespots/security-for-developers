@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>Lab4</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<style type="text/css">
+		input {
+			margin-top: 10px;
+		}
+		button {
+			margin-top: 10px;
+		}
+		.red{
+			color: red;
+		}
+		.green{
+			color: green;
+		}
+	</style>
+</head>
+<body>
+
+<div class="row" style="margin-top: 50px; margin-bottom: 150px; text-align: center;">
+	<div class="col-md-4"></div>
+	<div class="col-md-4">
+		<h1>WELCOME TO APPSEC LABS</h1>
+	</div>
+	<div class="col-md-3"></div>
+	<div class="col-md-1">
+		<button class="btn btn-lg btn-primary btn-block" id="logout" type="submit">Log out</button>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-1"></div>
+	<div class="col-md-4">
+		
+		<form class="form-signin">
+			<h1 class="h3 mb-3 font-weight-normal">Info</h1>
+		</form>
+		<div id="cardDatafromApi" style="font-size: 30px; text-align: center;"></div>
+	</div>
+
+	<div class="col-md-2"></div>
+
+	<div class="col-md-4">
+		<form class="form-signin">
+			<h1 class="h3 mb-3 font-weight-normal">Transfer</h1>
+			<label for="inputLoginTransferTo" class="sr-only">To login:</label>
+			<input name="login" type="login" id="inputLoginTransferTo" class="form-control" placeholder="Login" required autofocus>
+			<label for="inputAmount" class="sr-only">Amount:</label>
+			<input name="amount" type="text" id="inputAmount" class="form-control" placeholder="Amount" required>
+      		<button class="btn btn-lg btn-primary btn-block" id="transfer" type="submit">Transfer</button>
+		</form>
+	</div>
+
+	<div class="col-md-1"></div>
+
+</div>
+
+<div class="row" style="margin-top: 50px;">
+	<div class="col-md-4"></div>
+	
+	<div class="col-md-4">
+		<div id="datafromApi" style="font-size: 30px; text-align: center;"></div>
+	</div>
+	
+	<div class="col-md-4"></div>
+</div>
+
+<script type="text/javascript">
+	function log(some, color, id='datafromApi') {
+		document.getElementById(id).innerText += some + '\n';
+		document.getElementById(id).className = color;
+	}
+
+	function clear(id='datafromApi') {
+		document.getElementById(id).innerText = '';
+	}
+
+	loadCardInfo();
+	function loadCardInfo() {
+		$.ajax({
+	        type: "POST",
+	        url: "/info",
+	        data: { 
+	            token: localStorage.getItem('token')
+	        },
+	        success: function(result) {
+	        	clear('cardDatafromApi')
+	        	clear()
+	            if (result['info']) {
+	        		log('debit: ' + result['info']['debit']['pan'] + ' amount: ' + result['info']['debit']['amount'], 'green', 'cardDatafromApi')
+	        		if (result['info']['flag']) {
+	        			log('flag: ' + result['info']['flag'])
+	        		}
+	        	} else if (result['error']) {
+	        		log('Error:  ' + result['error'], 'red')
+	        	}
+	        },
+	        error: function(result) {
+	        	clear();
+	            log('error', 'red');
+	        }
+	    });
+	}
+
+
+	$("#transfer").click(function(e) {
+	    e.preventDefault();
+	    $.ajax({
+	        type: "POST",
+	        url: "/transfer",
+	        data: { 
+	        	token: localStorage.getItem('token'),
+	            to: $("#inputLoginTransferTo").val(),
+	            amount: $("#inputAmount").val() 
+	        },
+	        success: function(result) {
+	        	clear();
+	            if (result['info']) {
+	        		log('Success')
+	        		loadCardInfo()
+	        	} else {
+	        		log('Error: ' + result['error'], 'red')
+	        	}
+	        },
+	        error: function(result) {
+	        	clear();
+	            log('Error: ' + result['error'], 'red');
+	        }
+	    });
+	});
+
+	$("#logout").click(function(e) {
+	    localStorage.clear();
+	    window.location.href = '/';
+	});
+</script>
+
+</body>
+</html>
