@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>SQL Injection</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<style type="text/css">
+		input {
+			margin-top: 10px;
+		}
+		button {
+			margin-top: 10px;
+		}
+		.red{
+			color: red;
+		}
+		.green{
+			color: green;
+		}
+	</style>
+</head>
+<body>
+
+<div class="row" style="margin-top: 50px; margin-bottom: 150px; text-align: center;">
+	<div class="col-md-4"></div>
+	<div class="col-md-4">
+		<h1>WELCOME TO APPSEC CHALLENGE</h1>
+	</div>
+	<div class="col-md-4"></div>
+</div>
+
+<div class="row">
+	<div class="col-md-4"></div>
+	<div class="col-md-4">
+		<form class="form-signin">
+			<h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
+			<label for="inputLogin" class="sr-only">Login</label>
+			<input name="login" type="login" id="inputLogin" class="form-control" placeholder="Login" required autofocus>
+			<label for="inputPassword" class="sr-only">Password</label>
+			<input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      		<button class="btn btn-lg btn-primary btn-block" id="singin" type="submit">Sign In</button>
+		</form>
+	</div>
+	<div class="col-md-4"></div>
+</div>
+
+<div class="row" style="margin-top: 50px;">
+	<div class="col-md-4"></div>
+	
+	<div class="col-md-4">
+		<div id="datafromApi" style="font-size: 30px; text-align: center;">
+			
+		</div>
+	</div>
+	
+	<div class="col-md-4"></div>
+</div>
+
+
+<script type="text/javascript">
+	function log(some, color) {
+		document.getElementById('datafromApi').innerText += some + '\n';
+		document.getElementById('datafromApi').className = color;
+	}
+
+	function clear() {
+		document.getElementById('datafromApi').innerText = '';
+	}
+
+
+	$("#singin").click(function(e) {
+	    e.preventDefault();
+	    $.ajax({
+	        type: "POST",
+	        url: "/",
+	        data: { 
+	            login: $("#inputLogin").val(),
+	            password: $("#inputPassword").val() 
+	        },
+	        success: function(result) {
+	        	clear();
+	            if (result['login'] && result['flag']) {
+	        		log('Hello ' + result['login'] + ', your flag: ' + result['flag'], 'green')
+	        	} else if (result['error']) {
+	        		log('Error:  ' + result['error'], 'red')
+	        	}
+	        },
+	        error: function(result) {
+	        	clear();
+	            log('error', 'red');
+	        }
+	    });
+	});
+</script>
+
+</body>
+</html>
